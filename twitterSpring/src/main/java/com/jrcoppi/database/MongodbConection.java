@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class MongodbConection implements DatabaseConectionInterface {
 
 	@Override
-	public String search(String sql) {
+	public String search(String sql,String[] campos) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -27,6 +27,18 @@ public class MongodbConection implements DatabaseConectionInterface {
 	public Integer getLastInsertId() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void update(String Dados, String sql) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(String id,String sql) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
