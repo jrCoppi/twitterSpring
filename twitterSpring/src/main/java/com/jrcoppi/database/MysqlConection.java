@@ -28,7 +28,7 @@ public class MysqlConection implements DatabaseConectionInterface {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             JDBC_DRIVER = "com.mysql.jdbc.Driver";
-            DB_URL  = "jdbc:mysql://localhost/brandfeeling";
+            DB_URL  = "jdbc:mysql://localhost/twittermining";
             
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
         } catch (Exception ex) {
@@ -38,13 +38,13 @@ public class MysqlConection implements DatabaseConectionInterface {
 	    
 
 	@Override
-	public String search(String sql) {
+	public String search(String sql, String[] campos) {
 		String retorno = "";
         String retornoInt = "";
         String separador = "";
         String separadorInt = "";
-        String[] campos = null;
         try {
+        	System.out.println(sql);
             PreparedStatement stmt = this.conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -57,7 +57,7 @@ public class MysqlConection implements DatabaseConectionInterface {
             }
         } catch (Exception ex) {
             System.out.println(sql);
-            System.out.println(campos);
+            System.out.println(ex.getMessage());
         } 
         return retorno;
 	}
@@ -108,5 +108,41 @@ public class MysqlConection implements DatabaseConectionInterface {
         } 
         return retorno;
     }
+
+
+	@Override
+	public void update(String Dados, String sql) {
+		String[] parts = Dados.split(";");
+        
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            
+            for (int i = 0; i < parts.length; i++) {
+                stmt.setString(i+1,parts[i]);
+            }
+            
+            stmt.execute();
+            stmt.close();
+        } catch (Exception ex) {
+            System.out.println(sql);
+            System.out.println(Dados);
+            ex.printStackTrace();
+        }
+	}
+
+
+	@Override
+	public void delete(String id, String sql) {
+        
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            stmt.setString(1, id);
+            stmt.execute();
+            stmt.close();
+        } catch (Exception ex) {
+            System.out.println(sql);
+            ex.printStackTrace();
+        }
+	}
 
 }
