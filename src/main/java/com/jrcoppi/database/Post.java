@@ -22,7 +22,6 @@ public class Post {
         campos[0] = "ds_post";
         
         String retorno = Database.search(sql,campos);
-        System.out.println(retorno);
         
         return retorno;
     }

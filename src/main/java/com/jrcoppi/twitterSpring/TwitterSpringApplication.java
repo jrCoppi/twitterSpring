@@ -9,13 +9,13 @@ import com.jrcoppi.database.Post;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "com.jrcoppi.database","com.jrcoppi.twitterSpring"})
+@ComponentScan(basePackages = { "com.jrcoppi.database","com.jrcoppi.twitterSpring","com.jrcoppi.rest"})
 public class TwitterSpringApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TwitterSpringApplication.class, args);
 
-		ApplicationContext applicationContext =
+		/*ApplicationContext applicationContext =
 				SpringApplication.run(TwitterSpringApplication.class, args);
 		Post conection =
 				applicationContext.getBean(Post.class);
@@ -24,7 +24,7 @@ public class TwitterSpringApplication {
 		
 		System.out.println(conection.insertPost("this  is a test"));
 		conection.updatePost("changiing 30", "1");
-		conection.deletePost("313");
+		conection.deletePost("313");*/
 	}
 
 }
