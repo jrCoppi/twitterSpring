@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,32 +39,26 @@ public class MysqlConection implements DatabaseConectionInterface {
 	    
 
 	@Override
-	public String search(String sql, String[] campos) {
-		String retorno = "";
-        String retornoInt = "";
-        String separador = "";
-        String separadorInt = "";
+	public ArrayList<String> search(String sql, String[] campos) {
+        ArrayList<String> resultado = new ArrayList<String>();
+        
         try {
         	System.out.println(sql);
             PreparedStatement stmt = this.conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 for (String campo : campos) {
-                    retornoInt += separador + rs.getString(campo);
-                    separador =  ";";
+                	resultado.add(rs.getString(campo));
                 }
-                retorno += separadorInt + retornoInt;
-                separadorInt = "|";
             }
         } catch (Exception ex) {
-            System.out.println(sql);
             System.out.println(ex.getMessage());
         } 
-        return retorno;
+        return resultado;
 	}
 	
 	@Override
-	public void insert(String Dados, String sql){
+	public boolean insert(String Dados, String sql){
 		String[] parts = Dados.split(";");
         
         try {
@@ -77,9 +72,11 @@ public class MysqlConection implements DatabaseConectionInterface {
             stmt.close();
         } catch (Exception ex) {
             System.out.println(sql);
-            System.out.println(Dados);
             ex.printStackTrace();
+            return false;
         }
+
+        return true;
 	}
 	
 	public void insertMulti(String sql){

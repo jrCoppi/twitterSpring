@@ -1,18 +1,21 @@
 package com.jrcoppi.database;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Component;
 
 @Component
 public class MongodbConection implements DatabaseConectionInterface {
 
 	@Override
-	public String search(String sql,String[] campos) {
+	public ArrayList<String> search(String sql,String[] campos) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void insert(String Dados, String sql) {
+	public boolean insert(String Dados, String sql) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}

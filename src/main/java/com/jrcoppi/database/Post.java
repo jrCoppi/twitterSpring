@@ -1,5 +1,7 @@
 package com.jrcoppi.database;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +11,7 @@ public class Post {
 	@Autowired
 	private DatabaseConectionInterface Database;
 	
-	public String getPesquisa(String termo){
+	public ArrayList<String> getPesquisa(String termo){
         String sql = 
         		"SELECT po.ds_post "
         		+ "FROM pesquisa p "
@@ -21,23 +23,17 @@ public class Post {
         
         campos[0] = "ds_post";
         
-        String retorno = Database.search(sql,campos);
-        
-        return retorno;
+        return Database.search(sql,campos);
     }
 	
-    public Integer insertPost(String post){
+    public boolean insertPost(String post){
         String sql = "insert into post " +
             "(id_post,ds_post)" +
             " values (null,?)";
         
         String dados = post;
         
-        //inserir
-        Database.insert(dados, sql);
-        
-        //retorna o ultimo id
-        return Database.getLastInsertId();
+        return Database.insert(dados, sql);
     }
     
     public void updatePost(String post,String id){
