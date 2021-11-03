@@ -36,21 +36,21 @@ public class Post {
         return Database.insert(dados, sql);
     }
     
-    public void updatePost(String post,String id){
+    public boolean updatePost(String post,String id){
         String sql = "update post set ds_post =  ? where id_post = ?";
         
         String dados = post + ';' + id;
         
         //atualiza
-        Database.update(dados, sql);
+        return Database.update(dados, sql);
     }
     
-    public void deletePost(String id){
+    public boolean deletePost(String id){
         String sql = "DELETE FROM post where id_post = ?";
         
         String dados = id;
         
         //atualiza
-        Database.delete(dados, sql);
+        return Database.delete(dados, sql);
     }
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,35 +61,28 @@ public class MysqlConection implements DatabaseConectionInterface {
 	@Override
 	public boolean insert(String Dados, String sql){
 		String[] parts = Dados.split(";");
+        PreparedStatement stmt = null;
         
-        try {
-            PreparedStatement stmt = this.conn.prepareStatement(sql);
-            
-            for (int i = 0; i < parts.length; i++) {
+		try {
+			stmt = this.conn.prepareStatement(sql);
+			for (int i = 0; i < parts.length; i++) {
                 stmt.setString(i+1,parts[i]);
             }
             
-            stmt.execute();
-            stmt.close();
-        } catch (Exception ex) {
-            System.out.println(sql);
-            ex.printStackTrace();
-            return false;
-        }
-
-        return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        return this.execSql(stmt);
 	}
 	
 	public void insertMulti(String sql){
-        try {
-            PreparedStatement stmt = this.conn.prepareStatement(sql);
-            
-            stmt.execute();
-            stmt.close();
-        } catch (Exception ex) {
-            System.out.println(sql);
-            ex.printStackTrace();
-        }
+        PreparedStatement stmt = null;
+		try {
+			stmt = this.conn.prepareStatement(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        this.execSql(stmt);
     }
 	
 	@Override
@@ -108,38 +102,45 @@ public class MysqlConection implements DatabaseConectionInterface {
 
 
 	@Override
-	public void update(String Dados, String sql) {
+	public boolean update(String Dados, String sql) {
 		String[] parts = Dados.split(";");
         
-        try {
-            PreparedStatement stmt = this.conn.prepareStatement(sql);
-            
+		PreparedStatement stmt = null;
+		try {
+			stmt = this.conn.prepareStatement(sql);
             for (int i = 0; i < parts.length; i++) {
                 stmt.setString(i+1,parts[i]);
             }
-            
-            stmt.execute();
-            stmt.close();
-        } catch (Exception ex) {
-            System.out.println(sql);
-            System.out.println(Dados);
-            ex.printStackTrace();
-        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+        return this.execSql(stmt);
 	}
 
 
 	@Override
-	public void delete(String id, String sql) {
-        
-        try {
-            PreparedStatement stmt = this.conn.prepareStatement(sql);
-            stmt.setString(1, id);
+	public boolean delete(String id, String sql) {
+		PreparedStatement stmt = null;
+		try {
+			stmt = this.conn.prepareStatement(sql);
+	        stmt.setString(1, id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        return this.execSql(stmt);
+	}
+	
+	private boolean execSql(PreparedStatement stmt) {
+		try {
             stmt.execute();
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(sql);
             ex.printStackTrace();
+            return false;
         }
+		
+		return true;
 	}
 
 }

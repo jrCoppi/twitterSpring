@@ -33,13 +33,15 @@ public class MongodbConection implements DatabaseConectionInterface {
 	}
 
 	@Override
-	public void update(String Dados, String sql) {
+	public boolean update(String Dados, String sql) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void delete(String id,String sql) {
+	public boolean delete(String id,String sql) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}
