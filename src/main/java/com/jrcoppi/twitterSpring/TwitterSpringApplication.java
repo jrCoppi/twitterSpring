@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-@EnableJpaRepositories("com.jrcoppi.rest")
-@EntityScan("com.jrcoppi.rest")
+@EnableJpaRepositories("repository")
+@EntityScan("entity")
 @ComponentScan(basePackages = { "entity","repository","com.jrcoppi.database","com.jrcoppi.twitterSpring","com.jrcoppi.rest"})
 
 public class TwitterSpringApplication {
