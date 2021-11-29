@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import entity.Post;
+import repository.PesquisaRepository;
 import repository.PostRepository;
 
 
@@ -26,10 +27,13 @@ public class RestApi {
 	
 	@Autowired
 	private PostRepository postRepository;
+	
+	@Autowired
+	private PesquisaRepository pesquisaRepository;
 
 	@GetMapping(path = "/pesquisa/{marca}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ArrayList<String> pesquisar(@PathVariable String marca) {
-		return  new ArrayList<String>();
+		return this.pesquisaRepository.findByTerm(marca);
 	}
 	
 	//Inserts a new Post into the database
