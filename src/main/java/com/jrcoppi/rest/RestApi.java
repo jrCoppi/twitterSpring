@@ -4,6 +4,7 @@ package com.jrcoppi.rest;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,20 +16,27 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jrcoppi.database.Post;
+import entity.Post;
+import repository.PesquisaRepository;
+import repository.PostRepository;
 
-//Controller
+
+
 @RestController
 public class RestApi {
 	
 	@Autowired
-	private Post post;
+	private PostRepository postRepository;
+	
+	@Autowired
+	private PesquisaRepository pesquisaRepository;
 
 	@GetMapping(path = "/pesquisa/{marca}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ArrayList<String> pesquisar(@PathVariable String marca) {
-		return this.post.getPesquisa(marca);
+		return this.pesquisaRepository.findByTerm(marca);
 	}
 	
+	//Inserts a new Post into the database
 	@PostMapping(path = "/post",produces = MediaType.APPLICATION_JSON_VALUE)
 	public LinkedHashMap<String, Boolean> salvarPost(@RequestBody Map<String, Object> payload) {
 		LinkedHashMap<String, Boolean> resultado = new LinkedHashMap<String, Boolean>(); 
@@ -38,32 +46,67 @@ public class RestApi {
 			return resultado;
 		}
 		
-		resultado.put("sucesso", this.post.insertPost(payload.get("post").toString()));
+		Post newPost = new Post();
+		newPost.setDsPost(payload.get("post").toString());
+	    try {
+			this.postRepository.save(newPost);
+			resultado.put("sucesso", true);
+		} catch (Exception e) {
+			resultado.put("sucesso", false);
+		}
+		
 		return resultado;
 		
 	}
 	
+	//Updates a current post
 	@PutMapping(path = "/post/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public LinkedHashMap<String, Boolean> editarPost(@RequestBody Map<String, Object> payload, @PathVariable int id){
+	public LinkedHashMap<String, Boolean> editarPost(@RequestBody Map<String, Object> payload, @PathVariable long id){
 		LinkedHashMap<String, Boolean> resultado = new LinkedHashMap<String, Boolean>(); 
-		
-		System.out.println(payload);
-		System.out.println(id);
 		
 		if(payload.get("post") == null) {
 			resultado.put("sucesso", false);
 			return resultado;
 		}
 		
-		resultado.put("sucesso", this.post.updatePost(payload.get("post").toString(),String.valueOf(id)));
+		Optional<Post> postEdit = this.postRepository.findById(id);
+		
+		if(!postEdit.isPresent()) {
+			resultado.put("sucesso", false);
+			return resultado;
+		}
+		
+		postEdit.get().setDsPost(payload.get("post").toString());
+		
+		try {
+			this.postRepository.save(postEdit.get());
+			resultado.put("sucesso", true);
+		} catch (Exception e) {
+			resultado.put("sucesso", false);
+		}
+		
 		return resultado;
 	}
 	
+	//Removes a post from the database (if possible)
 	@DeleteMapping(path = "/post/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public LinkedHashMap<String, Boolean> deletePost(@PathVariable int id){
+	public LinkedHashMap<String, Boolean> deletePost(@PathVariable long id){
 		LinkedHashMap<String, Boolean> resultado = new LinkedHashMap<String, Boolean>(); 
 		
-		resultado.put("sucesso", this.post.deletePost(String.valueOf(id)));
+		Optional<Post> postEdit = this.postRepository.findById(id);
+		
+		if(!postEdit.isPresent()) {
+			resultado.put("sucesso", false);
+			return resultado;
+		}
+		
+		try {
+			this.postRepository.delete(postEdit.get());
+			resultado.put("sucesso", true);
+		} catch (Exception e) {
+			resultado.put("sucesso", false);
+		}
+		
 		return resultado;
 	}
 
