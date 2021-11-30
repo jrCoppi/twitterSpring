@@ -2,14 +2,16 @@ package com.jrcoppi.twitterSpring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
-
-import com.jrcoppi.database.Post;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "com.jrcoppi.database","com.jrcoppi.twitterSpring","com.jrcoppi.rest"})
+@EnableJpaRepositories("repository")
+@EntityScan("entity")
+@ComponentScan(basePackages = { "entity","repository","com.jrcoppi.database","com.jrcoppi.twitterSpring","com.jrcoppi.rest"})
+
 public class TwitterSpringApplication {
 
 	public static void main(String[] args) {
